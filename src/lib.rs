@@ -116,7 +116,10 @@ pub fn request<U: IntoUrl>(u: U) -> Result<String> {
             return Err(ErrorKind::NoHost.into());
         }
     };
-    let data = format!("GET {} HTTP/1.0\r\nHost: {}\r\n\r\n", url.path(), host);
+    let data = format!("GET {} HTTP/1.1\r\n\
+                        Host: {}\r\n\
+                        Connection: close\r\n\
+                        \r\n", url.path(), host);
     let stream = TcpStream::connect(&*addr)?;
     let timeout = Duration::from_secs(2);
     stream.set_read_timeout(Some(timeout))?;
